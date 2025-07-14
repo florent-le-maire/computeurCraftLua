@@ -40,7 +40,7 @@ while true do
             turtle.select(i)
             local item = turtle.getItemDetail()
             if item then
-                turtle.drop(8)
+                turtle.dropUp(8)
                 deposited = deposited + 8
                 potatoCount = potatoCount - 8
             end
@@ -48,7 +48,7 @@ while true do
 
         -- Mettre 1 charbon
         turtle.select(1)
-        if turtle.getItemCount() > 0 and deposited % 8 < coal then
+        if turtle.getItemCount() > 0 and deposited % 8 > coal then
             turtle.drop(1)
             coal = coal + 1
         else
