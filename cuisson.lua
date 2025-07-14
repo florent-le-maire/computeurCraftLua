@@ -1,3 +1,14 @@
+-- Slot 1 : Charbon
+-- Slots 2 à 16 : Patates
+
+local function getTotalInventoryCount()
+    local total = 0
+    for i = 2, 16 do
+        total = total + turtle.getItemCount(i)
+    end
+    return total
+end
+
 local function take(fromX, toY)
     for i = fromX, toY do
         turtle.select(i)
@@ -9,20 +20,19 @@ local function filter(fromX, toY)
     for i = fromX, toY do
         turtle.select(i)
         local item = turtle.getItemDetail()
-        if item then
-            if item.name ~= "minecraft:potato" then
-                -- rejeter immédiatement les carottes (ou tout autre item)
-                turtle.drop()
-            end
+        if item and item.name ~= "minecraft:potato" then
+            turtle.drop() -- rejette tout sauf les patates
         end
     end
 end
+
 local function takeAndFilter()
     local fromX = 2
     local toY = 16
     take(fromX, toY)
     filter(fromX, toY)
 end
+
 local function countThisIndex(i)
     turtle.select(i)
     local item = turtle.getItemDetail()
@@ -40,32 +50,57 @@ local function countForThisRange(fromX, toY)
     return count
 end
 
-local function dropItemToSmelt(i, count)
+local function dropItemToSmelt(i, toDrop)
     turtle.select(i)
     local item = turtle.getItemDetail()
-    if item then
-        return turtle.dropUp(count)
+    if item and item.name == "minecraft:potato" then
+        local amount = math.min(item.count, toDrop)
+        if amount > 0 then
+            if turtle.dropUp(amount) then
+                return amount
+            end
+        end
     end
-    return false
+    return 0
 end
+
 local function dropCoal()
     turtle.select(1)
-    return turtle.drop(1)
+    return turtle.getItemCount() > 0 and turtle.drop(1)
 end
 
-local function dropCoalAndSmelt(countItems)
-    
+local function dropCoalAndSmelt()
+    local toDrop = 8
+    for i = 2, 16 do
+        if toDrop <= 0 then break end
+        local dropped = dropItemToSmelt(i, toDrop)
+        toDrop = toDrop - dropped
+    end
+
+    if toDrop == 0 then
+        if not dropCoal() then
+            print("Plus de charbon")
+        end
+    else
+        print("Impossible de déposer 8 patates, arrêt du batch.")
+        return
+    end
 end
 
-
--- Boucle principale
 while true do
-    turtle.turnRight()
-    takeAndFilter()
-    turtle.turnLeft()
-    turtle.turnLeft()
-    local countItems = countForThisRange(2, 16)
-    dropCoalAndSmelt(countItems)
-    turtle.turnRight()
+    if getTotalInventoryCount() < 897 then
+        turtle.turnRight()
+        takeAndFilter()
+        turtle.turnLeft()
+        turtle.turnLeft()
+        local countItems = countForThisRange(2, 16)
+        if countItems > 8 then
+            dropCoalAndSmelt(countItems)
+        end
+        turtle.turnRight()
+    else
+        print("Trop d'objets dans l'inventaire, en attente...")
+    end
+
     sleep(5)
 end
