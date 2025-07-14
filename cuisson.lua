@@ -6,13 +6,15 @@ while true do
     -- 1. Tente de prendre un item à la fois pour filtrer immédiatement
     for i = 2, 16 do
         turtle.select(i)
-        if turtle.suck() then
-            local item = turtle.getItemDetail()
-            if item then
-                if item.name ~= "minecraft:potato" then
-                    -- rejeter immédiatement les carottes (ou tout autre item)
-                    turtle.drop()
-                end
+        turtle.suck()
+    end
+    for i = 2, 16 do
+        turtle.select(i)
+        local item = turtle.getItemDetail()
+        if item then
+            if item.name ~= "minecraft:potato" then
+                -- rejeter immédiatement les carottes (ou tout autre item)
+                turtle.drop()
             end
         end
     end
