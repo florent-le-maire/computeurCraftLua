@@ -88,33 +88,33 @@ local function dropCoalAndSmelt()
 end
 
 local function findBlockAround(targetBlockName)
-  for i = 1, 4 do
-    local hasBlock, data = turtle.inspect()
-    if hasBlock and data.name == targetBlockName then
-      return true, i 
+    for i = 1, 4 do
+        local hasBlock, data = turtle.inspect()
+        if hasBlock and data.name == targetBlockName then
+            return true, i
+        end
+        turtle.turnLeft()
     end
-    turtle.turnLeft()
-  end
-  return false, 4 
+    return false, 4
 end
 
 while true do
     if getTotalInventoryCount() < 897 then
-		local found, turns = findBlockAround("minecraft:chest")
-		if found then
-		  print("Coffre trouvé après " .. (turns - 1) .. " rotation(s) !")
-		else
-		  print("Aucun coffre trouvé autour.")
-		  break
-		end
+        local found, turns = findBlockAround("minecraft:chest")
+        if found then
+            print("Coffre trouvé après " .. (turns - 1) .. " rotation(s) !")
+        else
+            print("Aucun coffre trouvé autour.")
+            break
+        end
         takeAndFilter()
-		found, turns = findBlockAround("minecraft:furnace")
-		if found then
-		  print("Four trouve apres " .. (turns - 1) .. " rotation(s) !")
-		else
-		  print("Aucun four trouvé autour.")
-		  break
-		end
+        found, turns = findBlockAround("minecraft:furnace")
+        if found then
+            print("Four trouve apres " .. (turns - 1) .. " rotation(s) !")
+        else
+            print("Aucun four trouvé autour.")
+            break
+        end
         local countItems = countForThisRange(2, 16)
         if countItems > 8 then
             dropCoalAndSmelt(countItems)
