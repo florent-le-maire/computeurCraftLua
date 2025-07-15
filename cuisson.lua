@@ -119,7 +119,6 @@ while true do
         if countItems > 8 then
             dropCoalAndSmelt(countItems)
         end
-        turtle.turnRight()
     else
         print("Trop d'objets dans l'inventaire, en attente...")
     end
