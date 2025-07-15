@@ -108,9 +108,9 @@ while true do
 		  break
 		end
         takeAndFilter()
-		found, turns = findBlockAround("minecraft:chest")
+		found, turns = findBlockAround("minecraft:furnace")
 		if found then
-		  print("Four trouvé après " .. (turns - 1) .. " rotation(s) !")
+		  print("Four trouve apres " .. (turns - 1) .. " rotation(s) !")
 		else
 		  print("Aucun four trouvé autour.")
 		  break
